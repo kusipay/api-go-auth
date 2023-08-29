@@ -35,6 +35,11 @@ resources:
         MfaConfiguration: "OFF"
         UsernameConfiguration:
           CaseSensitive: false
+        AutoVerifiedAttributes: ## phone_number | email
+          - email
+        UserAttributeUpdateSettings:
+          AttributesRequireVerificationBeforeUpdate:
+            - email
 
     UserPoolAAA:
       Type: AWS::Cognito::UserPool
@@ -126,14 +131,12 @@ resources:
             - Name: admin_only ## admin_only | verified_email | verified_phone_number
               Priority: 1
         AdminCreateUserConfig:
-          AllowAdminCreateUserOnly: true
+          AllowAdminCreateUserOnly: false
         DeletionProtection: INACTIVE
         MfaConfiguration: "OFF"
         UsernameConfiguration:
           CaseSensitive: false
-        AliasAttributes: ## phone_number | email | preferred_username
-          - preferred_username
-        UsernameAttributes: ## phone_number | email
+        UsernameAttributes: ## phone_number | email | preferred_username
           - email
         AutoVerifiedAttributes: ## phone_number | email
           - email
