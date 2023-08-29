@@ -69,7 +69,7 @@ resources:
         MfaConfiguration: "OFF"
         UsernameConfiguration:
           CaseSensitive: false
-        UsernameAttributes:  ## phone_number | email
+        UsernameAttributes: ## phone_number | email
           - email
           - phone_number
 
@@ -91,7 +91,28 @@ resources:
           - email
           - phone_number
           - preferred_username
-        UsernameAttributes:  ## phone_number | email
+        AutoVerifiedAttributes: ## phone_number | email
+          - email
+          - phone_number
+
+    UserPoolDDD:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.prefix}-ddd
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: admin_only ## admin_only | verified_email | verified_phone_number
+              Priority: 1
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: true
+        DeletionProtection: INACTIVE
+        MfaConfiguration: "OFF"
+        UsernameConfiguration:
+          CaseSensitive: false
+        UsernameAttributes: ## phone_number | email
+          - email
+          - phone_number
+        AutoVerifiedAttributes: ## phone_number | email
           - email
           - phone_number
 
