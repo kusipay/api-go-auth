@@ -54,10 +54,6 @@ resources:
           - email
           - phone_number
           - preferred_username
-        UserAttributeUpdateSettings:
-          AttributesRequireVerificationBeforeUpdate:
-            - email
-            - phone_number
 
     UserPoolBBB:
       Type: AWS::Cognito::UserPool
@@ -76,10 +72,6 @@ resources:
         UsernameAttributes: ## phone_number | email
           - email
           - phone_number
-        UserAttributeUpdateSettings:
-          AttributesRequireVerificationBeforeUpdate:
-            - email
-            - phone_number
 
     UserPoolCCC:
       Type: AWS::Cognito::UserPool
@@ -101,10 +93,6 @@ resources:
           - preferred_username
         AutoVerifiedAttributes: ## phone_number | email
           - email
-        UserAttributeUpdateSettings:
-          AttributesRequireVerificationBeforeUpdate:
-            - email
-            - phone_number
 
     UserPoolDDD:
       Type: AWS::Cognito::UserPool
@@ -128,7 +116,31 @@ resources:
         UserAttributeUpdateSettings:
           AttributesRequireVerificationBeforeUpdate:
             - email
-            - phone_number
+
+    UserPoolEEE:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.prefix}-eee
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: admin_only ## admin_only | verified_email | verified_phone_number
+              Priority: 1
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: true
+        DeletionProtection: INACTIVE
+        MfaConfiguration: "OFF"
+        UsernameConfiguration:
+          CaseSensitive: false
+        AliasAttributes: ## phone_number | email | preferred_username
+          - phone_number
+          - preferred_username
+        UsernameAttributes: ## phone_number | email
+          - email
+        AutoVerifiedAttributes: ## phone_number | email
+          - email
+        UserAttributeUpdateSettings:
+          AttributesRequireVerificationBeforeUpdate:
+            - email
 
   Outputs:
     UserPoolId:
