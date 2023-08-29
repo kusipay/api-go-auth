@@ -88,21 +88,21 @@ resources:
   Outputs:
     UserPoolId:
       Description: "User Pool Id"
-      Value: !Ref UserPool
+      Value: !Ref UserPoolZZZ
       Export:
         Name: ${self:custom.prefix}-userpoolid
     UserPoolArn:
       Description: "User Pool ARN"
-      Value: !GetAtt UserPool.Arn
+      Value: !GetAtt UserPoolZZZ.Arn
       Export:
         Name: ${self:custom.prefix}-userpoolarn
     UserPoolProviderName:
       Description: "User Pool Provider Name"
-      Value: !GetAtt UserPool.ProviderName
+      Value: !GetAtt UserPoolZZZ.ProviderName
       Export:
         Name: ${self:custom.prefix}-userpoolprovidername
     UserPoolProviderURL:
       Description: "User Pool Provider URL"
-      Value: !GetAtt UserPool.ProviderURL
+      Value: !GetAtt UserPoolZZZ.ProviderURL
       Export:
         Name: ${self:custom.prefix}-userpoolproviderurl
