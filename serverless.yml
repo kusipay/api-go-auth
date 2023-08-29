@@ -54,6 +54,10 @@ resources:
           - email
           - phone_number
           - preferred_username
+        UserAttributeUpdateSettings:
+          AttributesRequireVerificationBeforeUpdate:
+            - email
+            - phone_number
 
     UserPoolBBB:
       Type: AWS::Cognito::UserPool
@@ -72,6 +76,10 @@ resources:
         UsernameAttributes: ## phone_number | email
           - email
           - phone_number
+        UserAttributeUpdateSettings:
+          AttributesRequireVerificationBeforeUpdate:
+            - email
+            - phone_number
 
     UserPoolCCC:
       Type: AWS::Cognito::UserPool
@@ -93,6 +101,10 @@ resources:
           - preferred_username
         AutoVerifiedAttributes: ## phone_number | email
           - email
+        UserAttributeUpdateSettings:
+          AttributesRequireVerificationBeforeUpdate:
+            - email
+            - phone_number
 
     UserPoolDDD:
       Type: AWS::Cognito::UserPool
@@ -113,6 +125,10 @@ resources:
           - phone_number
         AutoVerifiedAttributes: ## phone_number | email
           - email
+        UserAttributeUpdateSettings:
+          AttributesRequireVerificationBeforeUpdate:
+            - email
+            - phone_number
 
   Outputs:
     UserPoolId:
