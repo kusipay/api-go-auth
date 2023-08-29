@@ -21,114 +21,13 @@ custom:
 
 resources:
   Resources:
-    UserPool:
+    UserPoolXXX:
       Type: AWS::Cognito::UserPool
       Properties:
-        UserPoolName: ${self:custom.prefix}-userpool
+        UserPoolName: ${self:custom.prefix}-xxx
         AccountRecoverySetting:
           RecoveryMechanisms:
-            - Name: admin_only ## admin_only | verified_email | verified_phone_number
-              Priority: 1
-        AdminCreateUserConfig:
-          AllowAdminCreateUserOnly: true
-        DeletionProtection: INACTIVE
-        MfaConfiguration: "OFF"
-        UsernameConfiguration:
-          CaseSensitive: false
-        AutoVerifiedAttributes: ## phone_number | email
-          - email
-        UserAttributeUpdateSettings:
-          AttributesRequireVerificationBeforeUpdate:
-            - email
-
-    UserPoolAAA:
-      Type: AWS::Cognito::UserPool
-      Properties:
-        UserPoolName: ${self:custom.prefix}-aaa
-        AccountRecoverySetting:
-          RecoveryMechanisms:
-            - Name: admin_only ## admin_only | verified_email | verified_phone_number
-              Priority: 1
-        AdminCreateUserConfig:
-          AllowAdminCreateUserOnly: true
-        DeletionProtection: INACTIVE
-        MfaConfiguration: "OFF"
-        UsernameConfiguration:
-          CaseSensitive: false
-        AliasAttributes: ## phone_number | email | preferred_username
-          - email
-          - phone_number
-          - preferred_username
-
-    UserPoolBBB:
-      Type: AWS::Cognito::UserPool
-      Properties:
-        UserPoolName: ${self:custom.prefix}-bbb
-        AccountRecoverySetting:
-          RecoveryMechanisms:
-            - Name: admin_only ## admin_only | verified_email | verified_phone_number
-              Priority: 1
-        AdminCreateUserConfig:
-          AllowAdminCreateUserOnly: true
-        DeletionProtection: INACTIVE
-        MfaConfiguration: "OFF"
-        UsernameConfiguration:
-          CaseSensitive: false
-        UsernameAttributes: ## phone_number | email
-          - email
-          - phone_number
-
-    UserPoolCCC:
-      Type: AWS::Cognito::UserPool
-      Properties:
-        UserPoolName: ${self:custom.prefix}-ccc
-        AccountRecoverySetting:
-          RecoveryMechanisms:
-            - Name: admin_only ## admin_only | verified_email | verified_phone_number
-              Priority: 1
-        AdminCreateUserConfig:
-          AllowAdminCreateUserOnly: true
-        DeletionProtection: INACTIVE
-        MfaConfiguration: "OFF"
-        UsernameConfiguration:
-          CaseSensitive: false
-        AliasAttributes: ## phone_number | email | preferred_username
-          - email
-          - phone_number
-          - preferred_username
-        AutoVerifiedAttributes: ## phone_number | email
-          - email
-
-    UserPoolDDD:
-      Type: AWS::Cognito::UserPool
-      Properties:
-        UserPoolName: ${self:custom.prefix}-ddd
-        AccountRecoverySetting:
-          RecoveryMechanisms:
-            - Name: admin_only ## admin_only | verified_email | verified_phone_number
-              Priority: 1
-        AdminCreateUserConfig:
-          AllowAdminCreateUserOnly: true
-        DeletionProtection: INACTIVE
-        MfaConfiguration: "OFF"
-        UsernameConfiguration:
-          CaseSensitive: false
-        UsernameAttributes: ## phone_number | email
-          - email
-          - phone_number
-        AutoVerifiedAttributes: ## phone_number | email
-          - email
-        UserAttributeUpdateSettings:
-          AttributesRequireVerificationBeforeUpdate:
-            - email
-
-    UserPoolEEE:
-      Type: AWS::Cognito::UserPool
-      Properties:
-        UserPoolName: ${self:custom.prefix}-eee
-        AccountRecoverySetting:
-          RecoveryMechanisms:
-            - Name: admin_only ## admin_only | verified_email | verified_phone_number
+            - Name: verified_email ## admin_only | verified_email | verified_phone_number
               Priority: 1
         AdminCreateUserConfig:
           AllowAdminCreateUserOnly: false
@@ -136,7 +35,49 @@ resources:
         MfaConfiguration: "OFF"
         UsernameConfiguration:
           CaseSensitive: false
-        UsernameAttributes: ## phone_number | email | preferred_username
+        AutoVerifiedAttributes: ## phone_number | email
+          - email
+        UserAttributeUpdateSettings:
+          AttributesRequireVerificationBeforeUpdate:
+            - email
+
+    UserPoolYYY:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.prefix}-yyy
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: verified_email ## admin_only | verified_email | verified_phone_number
+              Priority: 1
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: false
+        DeletionProtection: INACTIVE
+        MfaConfiguration: "OFF"
+        UsernameConfiguration:
+          CaseSensitive: false
+        AliasAttributes: ## phone_number | email | preferred_username
+          - email
+        AutoVerifiedAttributes: ## phone_number | email
+          - email
+        UserAttributeUpdateSettings:
+          AttributesRequireVerificationBeforeUpdate:
+            - email
+
+    UserPoolZZZ:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.prefix}-zzz
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: verified_email ## admin_only | verified_email | verified_phone_number
+              Priority: 1
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: false
+        DeletionProtection: INACTIVE
+        MfaConfiguration: "OFF"
+        UsernameConfiguration:
+          CaseSensitive: false
+        UsernameAttributes: ## phone_number | email
           - email
         AutoVerifiedAttributes: ## phone_number | email
           - email
