@@ -93,7 +93,6 @@ resources:
           - preferred_username
         AutoVerifiedAttributes: ## phone_number | email
           - email
-          - phone_number
 
     UserPoolDDD:
       Type: AWS::Cognito::UserPool
@@ -114,7 +113,6 @@ resources:
           - phone_number
         AutoVerifiedAttributes: ## phone_number | email
           - email
-          - phone_number
 
   Outputs:
     UserPoolId:
