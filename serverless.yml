@@ -36,6 +36,65 @@ resources:
         UsernameConfiguration:
           CaseSensitive: false
 
+    UserPoolAAA:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.prefix}-aaa
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: admin_only ## admin_only | verified_email | verified_phone_number
+              Priority: 1
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: true
+        DeletionProtection: INACTIVE
+        MfaConfiguration: "OFF"
+        UsernameConfiguration:
+          CaseSensitive: false
+        AliasAttributes: ## phone_number | email | preferred_username
+          - email
+          - phone_number
+          - preferred_username
+
+    UserPoolBBB:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.prefix}-bbb
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: admin_only ## admin_only | verified_email | verified_phone_number
+              Priority: 1
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: true
+        DeletionProtection: INACTIVE
+        MfaConfiguration: "OFF"
+        UsernameConfiguration:
+          CaseSensitive: false
+        UsernameAttributes:  ## phone_number | email
+          - email
+          - phone_number
+
+    UserPoolCCC:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: ${self:custom.prefix}-ccc
+        AccountRecoverySetting:
+          RecoveryMechanisms:
+            - Name: admin_only ## admin_only | verified_email | verified_phone_number
+              Priority: 1
+        AdminCreateUserConfig:
+          AllowAdminCreateUserOnly: true
+        DeletionProtection: INACTIVE
+        MfaConfiguration: "OFF"
+        UsernameConfiguration:
+          CaseSensitive: false
+        AliasAttributes: ## phone_number | email | preferred_username
+          - email
+          - phone_number
+          - preferred_username
+        UsernameAttributes:  ## phone_number | email
+          - email
+          - phone_number
+
   Outputs:
     UserPoolId:
       Description: "User Pool Id"
