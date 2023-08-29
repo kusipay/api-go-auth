@@ -27,7 +27,7 @@ resources:
         UserPoolName: ${self:custom.prefix}-userpool
         AccountRecoverySetting:
           RecoveryMechanisms:
-            - Name: admin-only ## admin-only | verified_email | verified_phone_number
+            - Name: admin_only ## admin_only | verified_email | verified_phone_number
               Priority: 1
         AdminCreateUserConfig:
           AllowAdminCreateUserOnly: true
