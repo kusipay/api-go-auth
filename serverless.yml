@@ -41,6 +41,34 @@ resources:
           AttributesRequireVerificationBeforeUpdate:
             - email
 
+    UserPoolClientXXX:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        UserPoolId: !Ref UserPoolXXX # Reference to your UserPool
+        ClientName: xxxxxx
+        GenerateSecret: false
+        SupportedIdentityProviders:
+          - COGNITO
+        PreventUserExistenceErrors: ENABLED
+        ExplicitAuthFlows:
+          - ALLOW_REFRESH_TOKEN_AUTH
+          - ALLOW_USER_PASSWORD_AUTH
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthFlows:
+          - code
+          - implicit
+        AllowedOAuthScopes:
+          - email
+          - openid
+        CallbackURLs:
+          - "https://jwt.ms" # Replace with your actual callback URL
+
+    UserPoolDomainXXX:
+      Type: AWS::Cognito::UserPoolDomain
+      Properties:
+        Domain: "uniquedomainxxxxxx" # Choose a unique domain prefix
+        UserPoolId: !Ref UserPoolXXX
+
     UserPoolYYY:
       Type: AWS::Cognito::UserPool
       Properties:
@@ -63,6 +91,34 @@ resources:
           AttributesRequireVerificationBeforeUpdate:
             - email
 
+    UserPoolClientYYY:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        UserPoolId: !Ref UserPoolYYY # Reference to your UserPool
+        ClientName: yyyyyy
+        GenerateSecret: false
+        SupportedIdentityProviders:
+          - COGNITO
+        PreventUserExistenceErrors: ENABLED
+        ExplicitAuthFlows:
+          - ALLOW_REFRESH_TOKEN_AUTH
+          - ALLOW_USER_PASSWORD_AUTH
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthFlows:
+          - code
+          - implicit
+        AllowedOAuthScopes:
+          - email
+          - openid
+        CallbackURLs:
+          - "https://jwt.ms" # Replace with your actual callback URL
+
+    UserPoolDomainYYY:
+      Type: AWS::Cognito::UserPoolDomain
+      Properties:
+        Domain: "uniquedomainyyyyyy" # Choose a unique domain prefix
+        UserPoolId: !Ref UserPoolYYY
+
     UserPoolZZZ:
       Type: AWS::Cognito::UserPool
       Properties:
@@ -84,6 +140,34 @@ resources:
         UserAttributeUpdateSettings:
           AttributesRequireVerificationBeforeUpdate:
             - email
+
+    UserPoolClientZZZ:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        UserPoolId: !Ref UserPoolZZZ # Reference to your UserPool
+        ClientName: zzzzzz
+        GenerateSecret: false
+        SupportedIdentityProviders:
+          - COGNITO
+        PreventUserExistenceErrors: ENABLED
+        ExplicitAuthFlows:
+          - ALLOW_REFRESH_TOKEN_AUTH
+          - ALLOW_USER_PASSWORD_AUTH
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthFlows:
+          - code
+          - implicit
+        AllowedOAuthScopes:
+          - email
+          - openid
+        CallbackURLs:
+          - "https://jwt.ms" # Replace with your actual callback URL
+
+    UserPoolDomainZZZ:
+      Type: AWS::Cognito::UserPoolDomain
+      Properties:
+        Domain: "uniquedomainzzzzzz" # Choose a unique domain prefix
+        UserPoolId: !Ref UserPoolZZZ
 
   Outputs:
     UserPoolId:
