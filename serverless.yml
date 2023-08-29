@@ -132,7 +132,6 @@ resources:
         UsernameConfiguration:
           CaseSensitive: false
         AliasAttributes: ## phone_number | email | preferred_username
-          - phone_number
           - preferred_username
         UsernameAttributes: ## phone_number | email
           - email
