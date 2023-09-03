@@ -17,8 +17,8 @@ package:
 
 custom:
   version: "v1"
-  tld: ${env:TOP_LEVEL_DOMAIN}
   sld: ${env:SECOND_LEVEL_DOMAIN}
+  tld: ${env:TOP_LEVEL_DOMAIN}
   prefix: ${self:service}-${self:provider.stage}
 
 resources:
