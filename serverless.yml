@@ -26,10 +26,10 @@ resources:
     IsProd: !Equals ["${self:provider.stage}", "prod"]
 
   Resources:
-    UserPool:
+    UserPoolCore:
       Type: AWS::Cognito::UserPool
       Properties:
-        UserPoolName: ${self:custom.prefix}-userpool
+        UserPoolName: ${self:custom.prefix}-userpoolcore
         Schema:
           - Name: email
             AttributeDataType: String
@@ -58,7 +58,7 @@ resources:
     UserPoolClientPublic:
       Type: AWS::Cognito::UserPoolClient
       Properties:
-        UserPoolId: !Ref UserPool # Reference to your UserPool
+        UserPoolId: !Ref UserPoolCore # Reference to your UserPool
         ClientName: ${self:custom.prefix}-publicclient
         GenerateSecret: false
         PreventUserExistenceErrors: ENABLED
@@ -77,10 +77,10 @@ resources:
           - profile
           - phone
         CallbackURLs:
-          - "https://jwt.ms" # Replace with your actual callback URL
+          - "http://localhost:5173" # Replace with your actual callback URL
 
     UserPoolDomainCognito:
       Type: AWS::Cognito::UserPoolDomain
       Properties:
-        Domain: "${self:custom.prefix}-1693732378"
-        UserPoolId: !Ref UserPool
+        Domain: "${self:custom.prefix}-1693780558"
+        UserPoolId: !Ref UserPoolCore
