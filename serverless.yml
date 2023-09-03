@@ -80,6 +80,19 @@ resources:
         Domain: "${self:custom.prefix}-1693728259"
         UserPoolId: !Ref UserPool
 
+    RecordSetGroupUserPoolDomainCustom:
+      Type: AWS::Route53::RecordSetGroup
+      Properties:
+        Comment: "${self:custom.prefix} UserPoolDomain RecordSetGroup"
+        HostedZoneId:
+          Fn::ImportValue: "${self:custom.sld}-${self:custom.tld}-hostedzoneid"
+        RecordSets:
+          - Name: !Ref UserPoolDomainCustom
+            Type: A
+            AliasTarget:
+              DNSName: !GetAtt UserPoolDomainCustom.CloudFrontDistribution
+              HostedZoneId: Z2FDTNDATAQYW2
+
     UserPoolDomainCustom:
       Type: AWS::Cognito::UserPoolDomain
       Properties:
@@ -93,19 +106,6 @@ resources:
             "auth-${self:provider.stage}.${self:custom.sld}.${self:custom.tld}",
           ]
         UserPoolId: !Ref UserPool
-
-    RecordSetGroupUserPoolDomainCustom:
-      Type: AWS::Route53::RecordSetGroup
-      Properties:
-        Comment: "${self:custom.prefix} UserPoolDomain RecordSetGroup"
-        HostedZoneId:
-          Fn::ImportValue: "${self:custom.sld}-${self:custom.tld}-hostedzoneid"
-        RecordSets:
-          - Name: !Ref UserPoolDomainCustom
-            Type: A
-            AliasTarget:
-              DNSName: !GetAtt UserPoolDomainCustom.CloudFrontDistribution
-              HostedZoneId: Z2FDTNDATAQYW2
 
   Outputs:
     UserPoolDomainA:
