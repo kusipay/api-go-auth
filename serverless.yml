@@ -108,13 +108,13 @@ resources:
               HostedZoneId: Z2FDTNDATAQYW2
 
   Outputs:
-    UserPoolDomain:
+    UserPoolDomainA:
       Description: domain1
       Value: !Ref UserPoolDomainCustom
       Export:
         Name: !Sub "${self:custom.prefix}-UserPoolDomainA"
 
-    UserPoolDomain:
+    UserPoolDomainB:
       Description: domain2
       Value: !GetAtt UserPoolDomainCustom.CloudFrontDistribution
       Export:
