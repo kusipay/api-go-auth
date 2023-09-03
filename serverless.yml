@@ -74,12 +74,6 @@ resources:
         CallbackURLs:
           - "https://jwt.ms" # Replace with your actual callback URL
 
-    UserPoolDomainCognito:
-      Type: AWS::Cognito::UserPoolDomain
-      Properties:
-        Domain: "${self:custom.prefix}-1693728259"
-        UserPoolId: !Ref UserPool
-
     RecordSetGroupUserPoolDomainCustom:
       Type: AWS::Route53::RecordSetGroup
       Properties:
