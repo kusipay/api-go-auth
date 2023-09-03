@@ -30,6 +30,11 @@ resources:
       Type: AWS::Cognito::UserPool
       Properties:
         UserPoolName: ${self:custom.prefix}-userpool
+        Schema:
+          - Name: email
+            AttributeDataType: String
+            Mutable: true
+            Required: true
         AccountRecoverySetting:
           RecoveryMechanisms:
             - Name: verified_email ## admin_only | verified_email | verified_phone_number
