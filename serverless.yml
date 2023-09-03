@@ -17,20 +17,23 @@ package:
 
 custom:
   version: "v1"
+  tld: ${env:TOP_LEVEL_DOMAIN}
+  sld: ${env:SECOND_LEVEL_DOMAIN}
   prefix: ${self:service}-${self:provider.stage}
 
 resources:
+  Conditions:
+    IsProd: !Equals ["${self:provider.stage}", "prod"]
+
   Resources:
     UserPool:
       Type: AWS::Cognito::UserPool
       Properties:
-        UserPoolName: ${self:custom.prefix}-xxx
+        UserPoolName: ${self:custom.prefix}-userpool
         AccountRecoverySetting:
           RecoveryMechanisms:
             - Name: verified_email ## admin_only | verified_email | verified_phone_number
               Priority: 1
-            - Name: admin_only
-              Priority: 2
         AdminCreateUserConfig:
           AllowAdminCreateUserOnly: false
         DeletionProtection: ACTIVE
@@ -46,3 +49,33 @@ resources:
         UserAttributeUpdateSettings:
           AttributesRequireVerificationBeforeUpdate:
             - email
+
+    UserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        UserPoolId: !Ref UserPool # Reference to your UserPool
+        ClientName: ${self:custom.prefix}-publicclient
+        GenerateSecret: false
+        PreventUserExistenceErrors: ENABLED
+        EnableTokenRevocation: true
+        AllowedOAuthFlowsUserPoolClient: true
+        SupportedIdentityProviders:
+          - COGNITO
+        ExplicitAuthFlows:
+          - ALLOW_REFRESH_TOKEN_AUTH
+          - ALLOW_USER_SRP_AUTH
+        AllowedOAuthFlows:
+          - code
+        AllowedOAuthScopes:
+          - openid
+          - email
+          - profile
+          - phone
+        CallbackURLs:
+          - "https://jwt.ms" # Replace with your actual callback URL
+
+    UserPoolDomain:
+      Type: AWS::Cognito::UserPoolDomain
+      Properties:
+        Domain: "${self:custom.prefix}-1693723847"
+        UserPoolId: !Ref UserPool
