@@ -74,42 +74,8 @@ resources:
         CallbackURLs:
           - "https://jwt.ms" # Replace with your actual callback URL
 
-    RecordSetGroupUserPoolDomainCustom:
-      Type: AWS::Route53::RecordSetGroup
-      Properties:
-        Comment: "${self:custom.prefix} UserPoolDomain RecordSetGroup"
-        HostedZoneId:
-          Fn::ImportValue: "${self:custom.sld}-${self:custom.tld}-hostedzoneid"
-        RecordSets:
-          - Name: !Ref UserPoolDomainCustom
-            Type: A
-            AliasTarget:
-              DNSName: !GetAtt UserPoolDomainCustom.CloudFrontDistribution
-              HostedZoneId: Z2FDTNDATAQYW2
-
-    UserPoolDomainCustom:
+    UserPoolDomainCognito:
       Type: AWS::Cognito::UserPoolDomain
       Properties:
-        CustomDomainConfig:
-          CertificateArn:
-            Fn::ImportValue: "${self:custom.sld}-${self:custom.tld}-acmcertificatearn"
-        Domain:
-          !If [
-            IsProd,
-            "auth.${self:custom.sld}.${self:custom.tld}",
-            "auth-${self:provider.stage}.${self:custom.sld}.${self:custom.tld}",
-          ]
+        Domain: "${self:custom.prefix}-1693732378"
         UserPoolId: !Ref UserPool
-
-  Outputs:
-    UserPoolDomainA:
-      Description: domain1
-      Value: !Ref UserPoolDomainCustom
-      Export:
-        Name: !Sub "${self:custom.prefix}-UserPoolDomainA"
-
-    UserPoolDomainB:
-      Description: domain2
-      Value: !GetAtt UserPoolDomainCustom.CloudFrontDistribution
-      Export:
-        Name: !Sub "${self:custom.prefix}-UserPoolDomainB"
