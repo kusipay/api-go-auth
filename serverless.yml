@@ -50,7 +50,7 @@ resources:
           AttributesRequireVerificationBeforeUpdate:
             - email
 
-    UserPoolClient:
+    UserPoolClientPublic:
       Type: AWS::Cognito::UserPoolClient
       Properties:
         UserPoolId: !Ref UserPool # Reference to your UserPool
@@ -74,8 +74,48 @@ resources:
         CallbackURLs:
           - "https://jwt.ms" # Replace with your actual callback URL
 
-    UserPoolDomain:
+    UserPoolDomainCognito:
       Type: AWS::Cognito::UserPoolDomain
       Properties:
-        Domain: "${self:custom.prefix}-1693723847"
+        Domain: "${self:custom.prefix}-1693728259"
         UserPoolId: !Ref UserPool
+
+    UserPoolDomainCustom:
+      Type: AWS::Cognito::UserPoolDomain
+      Properties:
+        CustomDomainConfig:
+          CertificateArn:
+            Fn::ImportValue: "${self:custom.sld}-${self:custom.tld}-acmcertificatearn"
+        Domain:
+          !If [
+            IsProd,
+            "auth.${self:custom.sld}.${self:custom.tld}",
+            "auth-${self:provider.stage}.${self:custom.sld}.${self:custom.tld}",
+          ]
+        UserPoolId: !Ref UserPool
+
+    RecordSetGroupUserPoolDomainCustom:
+      Type: AWS::Route53::RecordSetGroup
+      Properties:
+        Comment: "${self:custom.prefix} UserPoolDomain RecordSetGroup"
+        HostedZoneId:
+          Fn::ImportValue: "${self:custom.sld}-${self:custom.tld}-hostedzoneid"
+        RecordSets:
+          - Name: !Ref UserPoolDomainCustom
+            Type: A
+            AliasTarget:
+              DNSName: !GetAtt UserPoolDomainCustom.CloudFrontDistribution
+              HostedZoneId: Z2FDTNDATAQYW2
+
+  Outputs:
+    UserPoolDomain:
+      Description: domain1
+      Value: !Ref UserPoolDomainCustom
+      Export:
+        Name: !Sub "${self:custom.prefix}-UserPoolDomainA"
+
+    UserPoolDomain:
+      Description: domain2
+      Value: !GetAtt UserPoolDomainCustom.CloudFrontDistribution
+      Export:
+        Name: !Sub "${self:custom.prefix}-UserPoolDomainB"
