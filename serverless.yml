@@ -118,7 +118,8 @@ resources:
         UserPoolId: !Ref UserPoolCore
 
   Outputs:
-    Description: "Authorizer lambda arn"
-    Value: !GetAtt AuthorizerLambdaFunction.Arn
-    Export:
-      Name: ${self:custom.prefix}-authorizer
+    AuthorizerLambdaArn:
+      Description: "Authorizer lambda arn"
+      Value: !GetAtt AuthorizerLambdaFunction.Arn
+      Export:
+        Name: ${self:custom.prefix}-authorizer
