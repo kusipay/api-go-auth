@@ -21,6 +21,16 @@ custom:
   tld: ${env:TOP_LEVEL_DOMAIN}
   prefix: ${self:service}-${self:provider.stage}
 
+functions:
+  authorizer:
+    handler: bootstrap
+    package:
+      artifact: bin/test.zip
+    events:
+      - httpApi:
+          method: GET
+          path: /authorizer
+
 resources:
   Conditions:
     IsProd: !Equals ["${self:provider.stage}", "prod"]
