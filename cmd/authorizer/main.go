@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/kusipay/api-go-auth/middleware"
@@ -24,10 +25,16 @@ func errorResponse(err error) (events.APIGatewayV2CustomAuthorizerSimpleResponse
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event events.APIGatewayV2CustomAuthorizerV2Request) (events.APIGatewayV2CustomAuthorizerSimpleResponse, error) {
-	tokenString, ok := event.Headers["authorization"]
+	authorizationValue, ok := event.Headers["authorization"]
 	if !ok {
 		return errorResponse(fmt.Errorf("authorization token not found"))
 	}
+
+	if !strings.HasPrefix(authorizationValue, "Bearer ") {
+		return errorResponse(fmt.Errorf("invalid authorization token"))
+	}
+
+	tokenString := strings.TrimPrefix(authorizationValue, "Bearer ")
 
 	region := os.Getenv("REGION")
 	userPoolId := os.Getenv("USER_POOL_ID")
