@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
+	"github.com/kusipay/api-go-auth/middleware"
 	"github.com/mefellows/vesper"
 
 	"github.com/lestrrat-go/jwx/v2/jwk"
@@ -53,7 +54,7 @@ func Handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.
 }
 
 func main() {
-	v := vesper.New(Handler)
+	v := vesper.New(Handler).Use(middleware.LogMiddleware())
 
 	v.Start()
 }
