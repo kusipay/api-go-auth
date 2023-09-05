@@ -2,32 +2,32 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"net/http"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/kusipay/api-go-auth/middleware"
-	"github.com/kusipay/api-go-auth/util"
 	"github.com/mefellows/vesper"
 
 	"github.com/lestrrat-go/jwx/v2/jwk"
 	"github.com/lestrrat-go/jwx/v2/jwt"
 )
 
-func errorResponse(err error) (events.APIGatewayProxyResponse, error) {
-	return events.APIGatewayProxyResponse{
-		StatusCode: http.StatusInternalServerError,
-		Body:       err.Error(),
+func errorResponse(err error) (events.APIGatewayV2CustomAuthorizerSimpleResponse, error) {
+	return events.APIGatewayV2CustomAuthorizerSimpleResponse{
+		IsAuthorized: false,
+		Context: map[string]interface{}{
+			"message": err.Error(),
+		},
 	}, nil
 }
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
-func Handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayProxyResponse, error) {
-	tokenString := event.Headers["authorization"]
-
-	util.Log("handler |", tokenString)
+func Handler(ctx context.Context, event events.APIGatewayV2CustomAuthorizerV2Request) (events.APIGatewayV2CustomAuthorizerSimpleResponse, error) {
+	tokenString, ok := event.Headers["authorization"]
+	if !ok {
+		return errorResponse(fmt.Errorf("authorization token not found"))
+	}
 
 	region := os.Getenv("REGION")
 	userPoolId := os.Getenv("USER_POOL_ID")
@@ -36,7 +36,10 @@ func Handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.
 
 	cache := jwk.NewCache(ctx)
 
-	_ = cache.Register(jwksUri)
+	err := cache.Register(jwksUri)
+	if err != nil {
+		return errorResponse(err)
+	}
 
 	set, err := cache.Get(ctx, jwksUri)
 	if err != nil {
@@ -48,11 +51,9 @@ func Handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.
 		return errorResponse(err)
 	}
 
-	body, _ := json.Marshal(token.PrivateClaims())
-
-	return events.APIGatewayProxyResponse{
-		StatusCode: http.StatusOK,
-		Body:       string(body),
+	return events.APIGatewayV2CustomAuthorizerSimpleResponse{
+		IsAuthorized: true,
+		Context:      token.PrivateClaims(),
 	}, nil
 }
 

@@ -11,6 +11,16 @@ provider:
   httpApi:
     cors: true
     name: ${self:service}-${self:provider.stage}-api
+    authorizers:
+      lambdaAuthorizer:
+        name: ${self:service}-${self:provider.stage}-lambdaauthorizer
+        type: request
+        functionName: authorizer
+        resultTtlInSeconds: 300
+        identitySource:
+          - $request.header.Authorization
+        enableSimpleResponses: true
+        payloadVersion: "2.0"
   environment:
     REGION: ${self:provider.region}
     USER_POOL_ID: !Ref UserPoolCore
@@ -29,10 +39,17 @@ functions:
     handler: bootstrap
     package:
       artifact: bin/authorizer.zip
+
+  endpoint:
+    handler: bootstrap
+    package:
+      artifact: bin/endpoint.zip
     events:
       - httpApi:
           method: GET
-          path: /authorizer
+          path: /endpoint
+          authorizer:
+            name: lambdaAuthorizer
 
 resources:
   Conditions:
@@ -90,10 +107,18 @@ resources:
           - profile
           - phone
         CallbackURLs:
-          - "http://localhost:5173" # Replace with your actual callback URL
+          - "https://${self:provider.stage}.${self:custom.sld}.${self:custom.tld}"
+          - "https://${self:custom.sld}.${self:custom.tld}"
+          - "http://localhost:5173"
 
     UserPoolDomainCognito:
       Type: AWS::Cognito::UserPoolDomain
       Properties:
         Domain: "${self:custom.prefix}-1693780558"
         UserPoolId: !Ref UserPoolCore
+
+  Outputs:
+    Description: "Authorizer lambda arn"
+    Value: !GetAtt AuthorizerLambdaFunction.Arn
+    Export:
+      Name: ${self:custom.prefix}-authorizer
