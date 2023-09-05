@@ -4,26 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/mefellows/vesper"
+
+	"github.com/lestrrat-go/jwx/v2/jwk"
+	"github.com/lestrrat-go/jwx/v2/jwt"
 )
-
-type Jwk struct {
-	Alg string `json:"alg"`
-	E   string `json:"e"`
-	Kid string `json:"kid"`
-	Kty string `json:"kty"`
-	N   string `json:"n"`
-	Use string `json:"use"`
-}
-
-type JwkResponse struct {
-	Keys []Jwk `json:"keys"`
-}
 
 func errorResponse(err error) (events.APIGatewayProxyResponse, error) {
 	return events.APIGatewayProxyResponse{
@@ -34,42 +23,28 @@ func errorResponse(err error) (events.APIGatewayProxyResponse, error) {
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayProxyResponse, error) {
-	resp, err := http.Get(fmt.Sprintf("https://cognito-idp.%s.amazonaws.com/%s/.well-known/jwks.json", "us-east-1", "us-east-1_VwhhbfJUF"))
-	if err != nil {
-		return errorResponse(err)
-	}
-
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return errorResponse(err)
-	}
-
-	jwks := new(JwkResponse)
-
-	if err = json.Unmarshal(body, jwks); err != nil {
-		return errorResponse(err)
-	}
-
 	tokenString := event.Headers["Authorization"]
 
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		for _, key := range jwks.Keys {
-			if token.Header["kid"] == key.Kid {
-				return jwt.ParseRSAPublicKeyFromPEM([]byte(key.N))
-			}
-		}
+	region := os.Getenv("REGION")
+	userPoolId := os.Getenv("USER_POOL_ID")
 
-		return nil, fmt.Errorf("no key found")
-	})
+	jwksUri := fmt.Sprintf("https://cognito-idp.%s.amazonaws.com/%s/.well-known/jwks.json", region, userPoolId)
+
+	cache := jwk.NewCache(ctx)
+
+	_ = cache.Register(jwksUri)
+
+	set, err := cache.Get(ctx, jwksUri)
 	if err != nil {
 		return errorResponse(err)
 	}
 
-	if !token.Valid {
-		return errorResponse(fmt.Errorf("invalid token"))
+	token, err := jwt.Parse([]byte(tokenString), jwt.WithKeySet(set), jwt.WithValidate(true))
+	if err != nil {
+		return errorResponse(err)
 	}
+
+	body, _ := json.Marshal(token.PrivateClaims())
 
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
