@@ -9,6 +9,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/kusipay/api-go-auth/middleware"
+	"github.com/kusipay/api-go-auth/util"
 	"github.com/mefellows/vesper"
 
 	"github.com/lestrrat-go/jwx/v2/jwk"
@@ -24,7 +25,9 @@ func errorResponse(err error) (events.APIGatewayProxyResponse, error) {
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayProxyResponse, error) {
-	tokenString := event.Headers["Authorization"]
+	tokenString := event.Headers["authorization"]
+
+	util.Log("handler |", tokenString)
 
 	region := os.Getenv("REGION")
 	userPoolId := os.Getenv("USER_POOL_ID")
